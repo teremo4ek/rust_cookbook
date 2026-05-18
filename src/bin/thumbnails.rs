@@ -1,0 +1,55 @@
+use std::env;
+use std::fs::create_dir_all;
+use std::path::Path;
+
+use anyhow::{bail, Context};
+use glob::{glob_with, MatchOptions};
+use image::{imageops::FilterType, ImageError};
+use rayon::prelude::*;
+
+fn main() -> anyhow::Result<()> {
+    let options: MatchOptions = Default::default();
+    let files: Vec<_> = glob_with("./resource/*.jpg", options)?
+        .filter_map(|x| x.ok())
+        .collect();
+
+    if files.is_empty() {
+        let dir = env::current_dir()?.display().to_string();
+        bail!("No .jpg files found in {}", dir);
+    }
+
+    let thumb_dir = "output";
+    create_dir_all(thumb_dir)?;
+
+    println!("Saving {} thumbnails into '{}'...", files.len(), thumb_dir);
+
+    let image_failures: Vec<_> = files
+        .par_iter()
+        .map(|path| {
+            make_thumbnail(path, thumb_dir, 300).with_context(|| format!("{}", path.display()))
+        })
+        .filter_map(|x| x.err())
+        .collect();
+
+    image_failures.iter().for_each(|x| println!("{:?}", x));
+
+    println!(
+        "{} thumbnails saved successfully",
+        files.len() - image_failures.len()
+    );
+    Ok(())
+}
+
+fn make_thumbnail<PA, PB>(original: PA, thumb_dir: PB, longest_edge: u32) -> Result<(), ImageError>
+where
+    PA: AsRef<Path>,
+    PB: AsRef<Path>,
+{
+    let img = image::open(original.as_ref())?;
+    let file_name = original.as_ref().file_name().unwrap();
+    let file_path = thumb_dir.as_ref().join(file_name);
+
+    Ok(img
+        .resize(longest_edge, longest_edge, FilterType::Nearest)
+        .save(file_path)?)
+}
