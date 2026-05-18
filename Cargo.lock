@@ -1001,6 +1001,7 @@ name = "hello_world"
 version = "0.1.0"
 dependencies = [
  "ansi_term",
+ "anyhow",
  "base64 0.22.1",
  "chrono",
  "clap",
