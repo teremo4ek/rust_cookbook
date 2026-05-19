@@ -1,7 +1,7 @@
-use anyhow::{bail, Result};
+use anyhow::{bail, Context, Result};
 use reqwest::header::{HeaderValue, CONTENT_LENGTH, RANGE};
 use reqwest::StatusCode;
-use std::fs::File;
+use std::fs::{self, File};
 use std::str::FromStr;
 
 struct PartialRangeIter {
@@ -43,17 +43,17 @@ impl Iterator for PartialRangeIter {
 
 fn main() -> Result<()> {
     let url = "https://httpbin.org/range/102400?duration=2";
-    const CHUNK_SIZE: u32 = 10240;
+    const CHUNK_SIZE: u32 = 10000;
 
     let client = reqwest::blocking::Client::new();
     let response = client.head(url).send()?;
     let length = response
         .headers()
         .get(CONTENT_LENGTH)
-        .ok_or(anyhow::anyhow!("response does not contain content length"))?;
-    let length =
-        u64::from_str(length.to_str()?).map_err(|_| anyhow::anyhow!("invalid `Content-Length` header"))?;
+        .context("response does not contain content length")?;
+    let length = u64::from_str(length.to_str()?).context("invalid `Content-Length` header")?;
 
+    fs::create_dir_all("output")?;
     let mut output_file = File::create("output/download.bin")?;
 
     println!("starting download...");
@@ -67,11 +67,6 @@ fn main() -> Result<()> {
         }
         std::io::copy(&mut response, &mut output_file)?;
     }
-
-    // Read response as text
-    let content = response.text()?;
-    // Copy response bytes to file
-    std::io::copy(&mut content.as_bytes(), &mut output_file)?;
 
     println!("download completed successfully");
 
