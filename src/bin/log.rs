@@ -17,7 +17,7 @@ fn main() {
         .filter(None, LevelFilter::Info)
         .init();
 
-    log::warn!("warn");
+    log::warn!("warning!!!");
     log::info!("info");
     log::debug!("debug");
 }
