@@ -10,4 +10,12 @@ fn main() {
             }
         }
     }
+
+    let mut point = (1, 2);
+    let mut x_coord = &mut point.0;
+    *x_coord = 20;
+
+    x_coord = &mut point.1;
+    *x_coord = 10;
+    println!("point: {point:?}");
 }
