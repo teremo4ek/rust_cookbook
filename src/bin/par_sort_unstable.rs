@@ -8,7 +8,7 @@ fn main() {
         let mut rng = thread_rng();
 
         *p = (0..10)
-            .map(|_| rng.sample(&Alphanumeric))
+            .map(|_| rng.sample(Alphanumeric))
             .map(char::from)
             .collect()
     });

@@ -49,7 +49,6 @@ where
     let file_name = original.as_ref().file_name().unwrap();
     let file_path = thumb_dir.as_ref().join(file_name);
 
-    Ok(img
-        .resize(longest_edge, longest_edge, FilterType::Nearest)
-        .save(file_path)?)
+    img.resize(longest_edge, longest_edge, FilterType::Nearest)
+        .save(file_path)
 }

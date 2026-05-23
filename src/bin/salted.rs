@@ -42,7 +42,7 @@ fn main() -> Result<(), Unspecified> {
     );
 
     assert!(should_succeed.is_ok());
-    assert!(!should_fail.is_ok());
+    assert!(should_fail.is_err());
 
     Ok(())
 }

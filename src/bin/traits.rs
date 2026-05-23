@@ -1,8 +1,10 @@
 struct Dog {
     name: String,
+    #[allow(dead_code)]
     age: i8,
 }
 struct Cat {
+    #[allow(dead_code)]
     lives: i8,
 }
 
