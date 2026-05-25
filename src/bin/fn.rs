@@ -1,5 +1,5 @@
 fn make_greeter(prefix: String) -> impl Fn(&str) {
-    return move |name| println!("{} {}", prefix, name);
+    move |name| println!("{} {}", prefix, name)
 }
 
 fn main() {
