@@ -10,9 +10,7 @@ fn main() -> Result<(), Error> {
     let handle = Handle::from_path(path_to_read)?;
 
     if stdout_handle == handle {
-        return Err(Error::other(
-            "Вы читаете и пишете в один и тот же файл",
-        ));
+        return Err(Error::other("Вы читаете и пишете в один и тот же файл"));
     } else {
         let file = File::open(path_to_read)?;
         let file = BufReader::new(file);
