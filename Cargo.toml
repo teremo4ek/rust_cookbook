@@ -21,7 +21,7 @@ postgres = "0.19.7"
 rand = "0.8.5"
 rayon = "1.8.0"
 regex = "1.10.2"
-reqwest = { version = "0.11.23", features = ["blocking", "json"] }
+reqwest = { version = "0.11.23", features = ["blocking", "json", "rustls-tls"] }
 same-file = "1.0.6"
 select = "0.6.0"
 serde = { version = "1.0.193", features = ["derive"] }
@@ -47,6 +47,7 @@ memmap = "0.7.0"
 anyhow = "1.0.102"
 thiserror = "2.0.18"
 googletest = "0.14.2"
+scraper = "0.27.0"
 
 [dependencies.rusqlite]
 version = "0.31.0"
