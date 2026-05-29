@@ -1178,6 +1178,7 @@ dependencies = [
  "thiserror",
  "threadpool",
  "tokio",
+ "tokio-websockets",
  "toml",
  "unicode-segmentation",
  "url",
@@ -2916,6 +2917,12 @@ dependencies = [
 ]
 
 [[package]]
+name = "simdutf8"
+version = "0.1.5"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "e3a9fe34e3e7a50316060351f37187a3f546bce95496156754b601a5fa71b76e"
+
+[[package]]
 name = "siphasher"
 version = "0.3.11"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3289,6 +3296,20 @@ dependencies = [
  "futures-sink",
  "pin-project-lite",
  "tokio",
+]
+
+[[package]]
+name = "tokio-websockets"
+version = "0.13.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "dad543404f98bfc969aeb71994105c592acfc6c43323fddcd016bb208d1c65cb"
+dependencies = [
+ "bytes",
+ "futures-core",
+ "futures-sink",
+ "simdutf8",
+ "tokio",
+ "tokio-util",
 ]
 
 [[package]]
