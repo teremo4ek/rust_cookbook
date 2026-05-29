@@ -49,7 +49,14 @@ thiserror = "2.0.18"
 googletest = "0.14.2"
 scraper = "0.27.0"
 futures = "0.3.32"
-tokio-websockets = "0.13.2"
+tokio-websockets = { version = "0.13.2", features = [
+    "client",
+    "fastrand",
+    "server",
+    "sha1_smol",
+] }
+futures-util = "0.3.32"
+http = "1.4.1"
 
 [dependencies.rusqlite]
 version = "0.31.0"
