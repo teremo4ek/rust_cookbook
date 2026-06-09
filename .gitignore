@@ -1,4 +1,5 @@
 /target
 /output
+/rust_cookbook/output
 .claude/
 .claude/settings.local.json
