@@ -3,26 +3,41 @@ use tokio::net::{TcpListener, TcpStream};
 
 #[tokio::main]
 async fn main() {
-    // Привязываем обработчик к адресу
     let listener = TcpListener::bind("127.0.0.1:6379").await.unwrap();
 
     loop {
-        // Второй элемент содержит IP и порт нового подключения
         let (socket, _) = listener.accept().await.unwrap();
-        process(socket).await;
+        tokio::spawn(async move {
+            process(socket).await;
+        });
     }
 }
 
 async fn process(socket: TcpStream) {
-    // `Connection` позволяет читать/писать кадры (frames) redis вместо
-    // потоков байтов. Тип `Connection` определяется mini-redis
+    use mini_redis::Command::{self, Get, Set};
+    use std::collections::HashMap;
+
+    let mut db = HashMap::new();
+
     let mut connection = Connection::new(socket);
 
-    if let Some(frame) = connection.read_frame().await.unwrap() {
-        println!("GOT: {:?}", frame);
+    while let Some(frame) = connection.read_frame().await.unwrap() {
+        let response = match Command::from_frame(frame).unwrap() {
+            Set(cmd) => {
+                db.insert(cmd.key().to_string(), cmd.value().to_vec());
+                Frame::Simple("OK".to_string())
+            }
+            Get(cmd) => {
+                if let Some(value) = db.get(cmd.key()) {
+                    Frame::Bulk(value.clone().into())
+                } else {
+                    Frame::Null
+                }
+            }
+            cmd => panic!("Не реализовано {:?}", cmd),
+        };
 
-        // Отвечаем ошибкой
-        let response = Frame::Error("Unimplemented".to_string());
+        // Отправляем (пишем) ответ клиенту
         connection.write_frame(&response).await.unwrap();
     }
 }
