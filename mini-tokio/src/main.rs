@@ -1,7 +1,3 @@
-//! Demonstrates how to implement a (very) basic asynchronous rust executor and
-//! timer. The goal of this file is to provide some context into how the various
-//! building blocks fit together.
-
 use futures::future::BoxFuture;
 use std::cell::RefCell;
 use std::future::Future;
