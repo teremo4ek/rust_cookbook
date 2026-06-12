@@ -10,9 +10,6 @@ use std::time::{Duration, Instant};
 // use `unsafe` code.
 use futures::task::{self, ArcWake};
 
-// Main entry point. A mini-tokio instance is created and a few tasks are
-// spawned. Our mini-tokio implementation only supports spawning tasks and
-// setting delays.
 fn main() {
     // Create the mini-tokio instance.
     let mini_tokio = MiniTokio::new();
