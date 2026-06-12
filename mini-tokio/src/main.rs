@@ -11,7 +11,6 @@ use std::time::{Duration, Instant};
 use futures::task::{self, ArcWake};
 
 fn main() {
-    // Create the mini-tokio instance.
     let mini_tokio = MiniTokio::new();
 
     // Spawn the root task. All other tasks are spawned from the context of this
@@ -22,12 +21,15 @@ fn main() {
             // Wait for a little bit of time so that "world" is printed after
             // "hello"
             delay(Duration::from_millis(100)).await;
-            println!("world");
+            println!(
+                "'second phrase after delay' threadId={:?}",
+                thread::current().id()
+            );
         });
 
         // Spawn a second task
         spawn(async {
-            println!("hello");
+            println!("'first phrase' threadId={:?}", thread::current().id());
         });
 
         // We haven't implemented executor shutdown, so force the process to exit.
